@@ -24,7 +24,7 @@ MODEL=Xiaomi
 DEVICE=Ginkgo
 
 # Kernel Version Code
-VERSION=X1
+VERSION=V1.0
 
 # Kernel Defconfig
 DEFCONFIG=vendor/sixteen_defconfig
@@ -41,7 +41,7 @@ KERVER=$(make kernelversion)
 COMMIT_HEAD=$(git log --oneline -1)
 
 # Date and Time
-DATE=$(TZ=Asia/Kolkata date +"%Y%m%d-%T")
+DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 TANGGAL=$(date +"%F%S")
 
 # Specify Final Zip Name
@@ -74,32 +74,32 @@ function cloneTC() {
 	
 	if [ $COMPILER = "neutron" ];
 	then
-	post_msg " Cloning Neutron Clang ToolChain "
+	post_msg "|| Cloning Neutron Clang ToolChain ||"
 	git clone --depth=1  https://github.com/Neutron-Clang/neutron-toolchain.git clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 	
 	elif [ $COMPILER = "proton" ];
 	then
-	post_msg " Cloning Proton Clang ToolChain "
-	git clone --depth=1  https://github.com/kdrag0n/proton-clang -b master clang
+	post_msg "|| Cloning Proton Clang ToolChain ||"
+	git clone --depth=1 https://github.com/kdrag0n/proton-clang -b master clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 	
 	elif [ $COMPILER = "azure" ];
 	then
-	post_msg " Cloning Azure Clang ToolChain "
-	git clone --depth=1  https://gitlab.com/Panchajanya1999/azure-clang.git clang
+	post_msg "|| Cloning Azure Clang ToolChain ||"
+	git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang.git clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 	
 	elif [ $COMPILER = "eva" ];
 	then
-	post_msg " Cloning Eva GCC ToolChain "
-	git clone --depth=1 https://github.com/mvaisakh/gcc-arm64.git -b gcc-new gcc64
-	git clone --depth=1 https://github.com/mvaisakh/gcc-arm.git -b gcc-new gcc32
+	post_msg "|| Cloning Eva GCC ToolChain ||"
+	git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 -b gcc-master gcc64
+	git clone --depth=1 https://github.com/mvaisakh/gcc-arm -b gcc-master gcc32
 	PATH=$KERNEL_DIR/gcc64/bin/:$KERNEL_DIR/gcc32/bin/:/usr/bin:$PATH
 	
 	elif [ $COMPILER = "aosp" ];
 	then
-	post_msg " Cloning Aosp Clang 14.0.1 ToolChain "
+	post_msg "|| Cloning Aosp Clang 14.0.1 ToolChain ||"
         mkdir aosp-clang
         cd aosp-clang || exit
 	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r437112b.tar.gz
@@ -138,7 +138,7 @@ function exports() {
         export LOCALVERSION="-${VERSION}"
         
         # KBUILD HOST and USER
-        export KBUILD_BUILD_HOST=ArchLinux
+        export KBUILD_BUILD_HOST=Ubuntu
         export KBUILD_BUILD_USER="ZenitsuXD"
         
         # CI
@@ -184,7 +184,7 @@ function push() {
 function compile() {
 START=$(date +"%s")
 	# Push Notification
-	post_msg "<b>$KBUILD_BUILD_VERSION CI Build Triggered</b>%0A<b>Docker OS: </b><code>$DISTRO</code>%0A<b>Kernel Version : </b><code>$KERVER</code>%0A<b>Date : </b><code>$(TZ=Asia/Kolkata date)</code>%0A<b>Device : </b><code>$MODEL [$DEVICE]</code>%0A<b>Pipeline Host : </b><code>$KBUILD_BUILD_HOST</code>%0A<b>Host Core Count : </b><code>$PROCS</code>%0A<b>Compiler Used : </b><code>$KBUILD_COMPILER_STRING</code>%0A<b>Branch : </b><code>$CI_BRANCH</code>%0A<b>Top Commit : </b><a href='$DRONE_COMMIT_LINK'>$COMMIT_HEAD</a>"
+	post_msg "<b>$KBUILD_BUILD_VERSION CI Build Triggered</b>%0A<b>Docker OS: </b><code>$DISTRO</code>%0A<b>Kernel Version : </b><code>$KERVER</code>%0A<b>Date : </b><code>$(TZ=Asia/Jakarta date)</code>%0A<b>Device : </b><code>$MODEL [$DEVICE]</code>%0A<b>Pipeline Host : </b><code>$KBUILD_BUILD_HOST</code>%0A<b>Host Core Count : </b><code>$PROCS</code>%0A<b>Compiler Used : </b><code>$KBUILD_COMPILER_STRING</code>%0A<b>Branch : </b><code>$CI_BRANCH</code>%0A<b>Top Commit : </b><a href='$DRONE_COMMIT_LINK'>$COMMIT_HEAD</a>"
 	
 	# Compile
 	if [ -d ${KERNEL_DIR}/clang ];
@@ -204,16 +204,16 @@ START=$(date +"%s")
 	       V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/gcc64 ];
 	   then
-	       make -j$(nproc --all) O=out \
-	       ARCH=arm64 \
-	       CROSS_COMPILE_COMPAT=arm-eabi- \
-	       CROSS_COMPILE=aarch64-elf- \
-	       AR=llvm-ar \
-	       NM=llvm-nm \
-	       OBJCOPY=llvm-objcopy \
-	       OBJDUMP=llvm-objdump \
-	       STRIP=llvm-strip \
-	       OBJSIZE=llvm-size \
+           make -j$(nproc --all) O=out ARCH=arm64 SUBARCH=arm64 ${DEFCONFIG}
+           make -j$(nproc --all) ARCH=arm64 SUBARCH=arm64 O=out \
+           CC=aarch64-elf-gcc \
+           AR=aarch64-elf-ar \
+           NM=aarch64-elf-nm \
+           LD=aarch64-elf-ld.bfd \
+           AS=aarch64-elf-as \
+           OBJCOPY=aarch64-elf-objcopy \
+           OBJDUMP=aarch64-elf-objdump \
+           CROSS_COMPILE_ARM32=$CROSS_COMPILE_ARM32
 	       V=$VERBOSE 2>&1 | tee error.log
         elif [ -d ${KERNEL_DIR}/aosp-clang ];
            then
@@ -254,7 +254,6 @@ function zipping() {
 
 cloneTC
 exports
-configs
 compile
 END=$(date +"%s")
 DIFF=$(($END - $START))
