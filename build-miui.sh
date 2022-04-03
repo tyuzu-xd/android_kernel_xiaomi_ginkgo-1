@@ -31,6 +31,8 @@ DEFCONFIG=vendor/sixteen_defconfig
 
 # Files
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
+TRINKET=$(pwd)/arch/arm64/boot/dts/qcom/trinket.dtb
 
 # Verbose Build
 VERBOSE=0
@@ -240,10 +242,9 @@ START=$(date +"%s")
 ##----------------------------------------------------------------##
 function zipping() {
 	# Copy Files To AnyKernel3 Zip
-	cp $IMAGE AnyKernel3
-    cp -f $out/arch/arm64/boot/Image.gz AnyKernel3
-    cp -f $out/arch/arm64/boot/dtbo.img AnyKernel3
-    cp -f $out/arch/arm64/boot/dts/qcom/trinket.dtb AnyKernel3/dtb
+	cp -f $IMAGE AnyKernel3
+    cp -f $DTBO AnyKernel3
+    cp -f $TRINKET AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
