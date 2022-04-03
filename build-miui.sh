@@ -243,8 +243,8 @@ START=$(date +"%s")
 function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp -f $IMAGE AnyKernel3
-    cp -f $DTBO AnyKernel3
-    cp -f $TRINKET AnyKernel3/dtb
+        cp -f $DTBO AnyKernel3
+        cp -f $TRINKET AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
