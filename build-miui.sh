@@ -87,7 +87,7 @@ function cloneTC() {
 	elif [ $COMPILER = "azure" ];
 	then
 	post_msg "|| Cloning Azure Clang ToolChain ||"
-	git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang.git clang
+	git clone --depth=1 https://github.com/tyuzu-xd/Sixteen_Clang -b clang-13 clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 	
 	elif [ $COMPILER = "eva" ];
@@ -110,7 +110,7 @@ function cloneTC() {
 	PATH="${KERNEL_DIR}/aosp-clang/bin:${KERNEL_DIR}/gcc/bin:${KERNEL_DIR}/gcc32/bin:${PATH}"
 	fi
         # Clone AnyKernel
-        git clone --depth=1 https://github.com/tyuzu-xd/AnyKernel3-1
+        git clone --depth=1 https://github.com/tyuzu-xd/AnyKernel3-1 -b lavender
 
 	}
 	
@@ -204,15 +204,15 @@ START=$(date +"%s")
 	       V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/gcc64 ];
 	   then
-           make -j$(nproc --all) O=out ARCH=arm64 SUBARCH=arm64 ${DEFCONFIG}
-           make -j$(nproc --all) ARCH=arm64 SUBARCH=arm64 O=out \
-           CC=aarch64-elf-gcc \
-           AR=aarch64-elf-ar \
-           NM=aarch64-elf-nm \
-           LD=aarch64-elf-ld.bfd \
-           AS=aarch64-elf-as \
-           OBJCOPY=aarch64-elf-objcopy \
-           OBJDUMP=aarch64-elf-objdump \
+           make -j$(nproc --all) O=$out \
+           ARCH=arm64 \
+           CC="aarch64-elf-gcc" \
+           AR="aarch64-elf-ar" \
+           NM="aarch64-elf-nm" \
+           LD="aarch64-elf-ld.bfd" \
+           AS="aarch64-elf-as" \
+           OBJCOPY="aarch64-elf-objcopy" \
+           OBJDUMP="aarch64-elf-objdump" \
            CROSS_COMPILE_ARM32=$CROSS_COMPILE_ARM32
 	       V=$VERBOSE 2>&1 | tee error.log
         elif [ -d ${KERNEL_DIR}/aosp-clang ];
@@ -241,6 +241,9 @@ START=$(date +"%s")
 function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
+    cp -f $out/arch/arm64/boot/Image.gz AnyKernel3
+    cp -f $out/arch/arm64/boot/dtbo.img AnyKernel3
+    cp -f $out/arch/arm64/boot/dts/qcom/trinket.dtb AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
