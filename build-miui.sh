@@ -30,7 +30,9 @@ VERSION=V1.0
 DEFCONFIG=vendor/sixteen_defconfig
 
 # Files
-IMAGE=$(pwd)/out-new-R/out/arch/arm64/boot/Image.gz-dtb
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
+TRINKET=$(pwd)/arch/arm64/boot/dts/qcom/trinket.dtb
 
 # Verbose Build
 VERBOSE=0
@@ -82,7 +84,7 @@ function cloneTC() {
 	then
 	post_msg "|| Cloning Proton Clang ToolChain ||"
 	git clone --depth=1 https://github.com/kdrag0n/proton-clang -b master clang
-	PATH="${KERNEL_DIR}/toolchain/Sixteen_Clang/bin:$PATH"
+	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 	
 	elif [ $COMPILER = "azure" ];
 	then
@@ -121,7 +123,7 @@ function exports() {
         # Export KBUILD_COMPILER_STRING
         if [ -d ${KERNEL_DIR}/clang ];
            then
-               export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/toolchain/Sixteen_Clang/bin/clang --version | head -n 1 | perl -pe 's/\((?:http|git).*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//' -e 's/^.*clang/clang/')"
+               export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
         elif [ -d ${KERNEL_DIR}/gcc64 ];
            then
                export KBUILD_COMPILER_STRING=$("$KERNEL_DIR/gcc64"/bin/aarch64-elf-gcc --version | head -n 1)
@@ -136,7 +138,6 @@ function exports() {
         
         # Export Local Version
         export LOCALVERSION="-${VERSION}"
-        export out=${pwd}/out-new-R-miui
         
         # KBUILD HOST and USER
         export KBUILD_BUILD_HOST=Ubuntu
@@ -241,9 +242,9 @@ START=$(date +"%s")
 ##----------------------------------------------------------------##
 function zipping() {
 	# Copy Files To AnyKernel3 Zip
-	cp -f $out/arch/arm64/boot/Image.gz AnyKernel3
-    cp -f $out/arch/arm64/boot/dtbo.img AnyKernel3
-    cp -f $out/arch/arm64/boot/dts/qcom/trinket.dtb AnyKernel3/dtb
+	cp -f $IMAGE AnyKernel3
+    cp -f $DTBO AnyKernel3
+    cp -f $TRINKET AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
