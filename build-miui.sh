@@ -89,7 +89,7 @@ function cloneTC() {
 	elif [ $COMPILER = "azure" ];
 	then
 	post_msg "|| Cloning Azure Clang ToolChain ||"
-	git clone --depth=1 https://github.com/tyuzu-xd/Sixteen_Clang -b clang-13 clang
+	git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang.git clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 	
 	elif [ $COMPILER = "eva" ];
