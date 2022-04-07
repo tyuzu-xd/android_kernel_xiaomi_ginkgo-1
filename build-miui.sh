@@ -65,6 +65,9 @@ COMPILER=aosp
 elif [ "$1" = "--azure" ];
 then
 COMPILER=azure
+elif [ "$1" = "--sdm" ];
+then
+COMPILER=sdm
 elif [ "$1" = "--neutron" ];
 then
 COMPILER=neutron
@@ -99,6 +102,12 @@ function cloneTC() {
 	git clone --depth=1 https://github.com/mvaisakh/gcc-arm -b gcc-master gcc32
 	PATH=$KERNEL_DIR/gcc64/bin/:$KERNEL_DIR/gcc32/bin/:/usr/bin:$PATH
 	
+        elif [ $COMPILER = "sdm" ];
+	then
+	post_msg "|| Cloning Proton Clang ToolChain ||"
+	git clone --depth=1 https://github.com/ThankYouMario/proprietary_vendor_qcom_sdclang.git -b 14 clang
+	PATH="${KERNEL_DIR}/clang/bin:$PATH"
+
 	elif [ $COMPILER = "aosp" ];
 	then
 	post_msg "|| Cloning Aosp Clang 14.0.1 ToolChain ||"
