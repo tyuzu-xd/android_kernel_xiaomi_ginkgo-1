@@ -104,7 +104,7 @@ function cloneTC() {
 	
         elif [ $COMPILER = "sdm" ];
 	then
-	post_msg "|| Cloning Proton Clang ToolChain ||"
+	post_msg "|| Cloning Snapdragon Clang ToolChain ||"
 	git clone --depth=1 https://github.com/ThankYouMario/proprietary_vendor_qcom_sdclang.git -b 14 clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 
