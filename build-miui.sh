@@ -20,7 +20,7 @@ KERNEL_DIR="$(pwd)"
 
 ##----------------------------------------------------------##
 # Device Name and Model
-MODEL=Redmi Note 8
+MODEL=Xiaomi
 DEVICE=Ginkgo
 
 # Kernel Version Code
