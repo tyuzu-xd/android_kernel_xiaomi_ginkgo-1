@@ -20,7 +20,7 @@ KERNEL_DIR="$(pwd)"
 
 ##----------------------------------------------------------##
 # Device Name and Model
-MODEL=Xiaomi
+MODEL=Redmi Note 8
 DEVICE=Ginkgo
 
 # Kernel Version Code
@@ -31,8 +31,6 @@ DEFCONFIG=vendor/sixteen_defconfig
 
 # Files
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
-DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
-TRINKET=$(pwd)/arch/arm64/boot/dts/qcom/trinket.dtb
 
 # Verbose Build
 VERBOSE=0
@@ -47,7 +45,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 TANGGAL=$(date +"%F%S")
 
 # Specify Final Zip Name
-ZIPNAME=Wolf
+ZIPNAME=Miui-Kernel
 FINAL_ZIP=${ZIPNAME}-${VERSION}-${DEVICE}-Kernel-${TANGGAL}.zip
 
 ##----------------------------------------------------------##
@@ -212,7 +210,7 @@ START=$(date +"%s")
            CLANG_TRIPLE=aarch64-linux-gnu- \
            CROSS_COMPILE=aarch64-linux-gnu- \
            CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-	       V=$VERBOSE 2>&1 | tee error.log
+	   V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/gcc64 ];
 	   then
            make -j$(nproc --all) O=$out \
@@ -251,9 +249,7 @@ START=$(date +"%s")
 ##----------------------------------------------------------------##
 function zipping() {
 	# Copy Files To AnyKernel3 Zip
-	cp -f $IMAGE AnyKernel3
-    cp -f $DTBO AnyKernel3
-    cp -f $TRINKET AnyKernel3/dtb
+	cp $IMAGE AnyKernel3
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
