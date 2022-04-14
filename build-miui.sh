@@ -24,7 +24,7 @@ MODEL=Xiaomi
 DEVICE=Ginkgo
 
 # Kernel Version Code
-VERSION=V1.0
+VERSION=V1
 
 # Kernel Defconfig
 DEFCONFIG=vendor/sixteen_defconfig
