@@ -20,8 +20,9 @@ VERSION=R
 DEFCONFIG=vendor/sixteen_defconfig
 
 # Files
-IMAGE=$(pwd)/ginkgo/out/arch/arm64/boot/Image.gz-dtb
-DTBO=$(pwd)/ginkgo/out/arch/arm64/boot/dtbo.img
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
+DTS=$(pwd)/out/arch/arm64/boot/dts/qcom/trinket.dtb
 
 # Verbose Build
 VERBOSE=0
@@ -234,6 +235,7 @@ function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
 	cp $DTBO AnyKernel3
+        cp $DTS AnyKernel3/dtb
 
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
