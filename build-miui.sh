@@ -17,7 +17,7 @@ DEVICE=Ginkgo
 VERSION=R
 
 # Kernel Defconfig
-DEFCONFIG=vendor/sexteen_defconfig
+DEFCONFIG=vendor/sixteen_defconfig
 
 # Files
 IMAGE=$(pwd)/ginkgo/out/arch/arm64/boot/Image.gz-dtb
