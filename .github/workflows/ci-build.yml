@@ -1,0 +1,24 @@
+name: Build kernel
+
+on:
+  push:
+    branches: [ MIUI ]
+  pull_request:
+    branches: [ MIUI ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        uses: actions/checkout@v3
+    
+      - name: Build y configure
+        run: ./build.sh
+
+      - name: Save
+        uses: actions/upload-artifact@v3
+        with:
+          name: kernel-zip
+          path:
+            /home/runner/work/android_kernel_xiaomi_ginkgo-1/android_kernel_xiaomi_ginkgo-1/*.zip
